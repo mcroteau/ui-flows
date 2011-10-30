@@ -1,0 +1,24 @@
+.interaction ul li{position: relative;padding:0;}
+.interaction ul li p{padding:0;margin:0;}
+.interaction ul li span{position: absolute;width:24px;left:-24px;display: block;background: #ccc;top:0px;display:none;}
+.interaction ul li span a{display:inline-block;width:10px;height:10px;margin:1px;overflow: hidden;text-indent: -100px;background: red;}
+.interaction ul li:hover span{display:block;}
+
+
+
+._jsPlumb_endpoint.ui-droppable{
+	background:url('../img/dot2.png') no-repeat left top;
+}
+._jsPlumb_endpoint.ui-draggable{
+	background:url('../img/dot.png') no-repeat left top;
+}
+
+html{
+	background:url('../img/pattern.jpg') repeat left top;
+	height:100%;width:100%;
+}
+body{
+	margin:0;padding:0;height:100%;width:100%;
+	background: url('../img/vignette.png') no-repeat left top; background-size:cover;
+}
+#uiflows{height:100%;width:100%;}
