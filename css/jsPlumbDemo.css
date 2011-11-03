@@ -27,6 +27,7 @@ x-font-size:8pt;
 
 a {text-decoration:none;color:#05f;x-font-weight:bold;x-font-family:helvetica;}
 a:hover {text-decoration:underline;}
+/*
 .window, .label { 
 	cursor:pointer;
 	box-shadow: 2px 2px 19px #aaa;
@@ -34,7 +35,7 @@ a:hover {text-decoration:underline;}
    -webkit-box-shadow: 2px 2px 19px #aaa;
    -moz-box-shadow: 2px 2px 19px #aaa;
 }
-
+*/
 #explanation { 
 	background-color:white;
 	color:black;

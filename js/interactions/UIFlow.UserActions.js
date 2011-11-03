@@ -9,7 +9,7 @@ UserActions.dropOptions = {
 };
 UserActions.color = "#0396c6";
 UserActions.endpoint = {
-		endpoint:["Dot", { radius:5 }],
+		endpoint:["Dot", { radius:8 }],
 		//paintStyle:{ fillStyle:UserActions.color },
 		paintStyle:{ fillStyle:""},
 		isSource:true,
@@ -23,7 +23,7 @@ UserActions.endpoint = {
 
 UserActions.color2 = "#ff9900";
 UserActions.endpoint2 = {
-		endpoint:["Dot", { radius:5 }],
+		endpoint:["Dot", { radius:8 }],
 		//paintStyle:{ fillStyle:UserActions.color2 },
 		paintStyle:{ fillStyle:"" },
 		isSource:false,
@@ -135,7 +135,7 @@ UserActions.createPoint = function(id, isInteraction){
 		var anchors = [];
 		var endpoint;
 		if(isInteraction){
-			anchors = ["TopRight", "TopLeft"];
+			anchors = ["TopLeft"];
 			endpoint = UserActions.endpoint2;
 		}else{
 			anchors = ["RightMiddle", "LeftMiddle"];
