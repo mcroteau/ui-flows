@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+		<script type="text/javascript" src="_js/jquery.min.js"></script>
+		<script type="text/javascript" src="_js/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+		<link href="_css/ui-lightness/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css" media="all" />
+<style>
+	#widgetWrap{border:1px solid #999999;background:#f1f1f1;width:416px;height:400px;overflow:hidden;}
+	#widgetWrap .heading h3{padding:5px;background:#999999;margin:0;font-family:Verdana, Geneva, sans-serif;font-size:12px;font-weight:normal;}
+	#widgetWrap iframe{width:100%;height:100%;}
+</style>
+</head>
+<body>
+	<div id="widgetWrap">
+  	<div class="heading">
+    	<h3>Jubilee Corona</h3>
+    </div>
+    <iframe frameborder="0" src="jc-working.html" scrolling="auto"></iframe>
+  </div>
+  
+  <!--div id="jc">
+  	<div class="heading">
+    	<h3>Jubilee Corona</h3>
+    </div>
+    <iframe frameborder="0" src="jc.html" scrolling="auto"></iframe>
+  </div-->
+    
+    <script>
+		$( "#widgetWrap" ).resizable({
+			minHeight:200,
+			minWidth:225,
+			start:dragStart,
+			stop:dragStop,
+			create:dragStop
+		}).draggable({
+			containment:'window'
+		});
+		
+		function dragStart(){
+			$(this).find('iframe').css({
+				visibility:'hidden'	
+			})
+		}
+		
+		function dragStop(){
+			$(this).find('iframe').css({
+				visibility:'visible'	
+			})
+			adjustIframe($(this))
+		}
+		
+		function adjustIframe(frameParent){
+			frameParent.find('iframe').css({
+				height:frameParent.height()	- frameParent.find('.heading').height()
+			})
+		}
+	</script>
+    
+</body>
+</html>
