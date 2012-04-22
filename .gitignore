@@ -47,3 +47,10 @@
 
 # Icon
 Icon/
+
+# Grails Configuration
+grails-app/conf/DataSource.groovy
+grails-app/conf/Config.groovy
+
+
+

@@ -97,4 +97,104 @@ class AccountController {
             redirect(action: "list")
         }
     }
+
+
+
+
+
+
+
+	def register = {
+	
+		if(Account.count() < 22){
+		
+			def shiroSubject = SecurityUtils.getSubject();
+	    	
+			if(!shiroSubject.authenticated){
+			
+				def accountInstance = new Account(params)
+				
+				def passwordHash = new Sha256Hash(params.passwordHash).toHex()
+				accountInstance.passwordHash = passwordHash
+				
+				def simpleRole = Role.findByName("ROLE_SIMPLE_USER")
+				accountInstance.addToRoles(simpleRole)
+				
+				println 'pass -> ' + params.passwordHash + '  hash->' + passwordHash 
+				println 'params -> ' + params
+				
+				
+    			if (accountInstance.save(flush: true)) {
+    				
+					println 'params -> ' + params
+					println "email -> ${accountInstance.email}"
+					
+					
+					
+					
+					
+					def host = "localhost:8080"
+						try{
+
+
+							File templateFile = grailsAttributes.getApplicationContext().getResource( File.separator + "emailTemplates" + File.separator + "registrationConfirmation.gtpl").getFile();
+
+							def binding = ["imageLocation" : "http://${host}/franklins13/images/logo.jpg"]
+					        def engine = new SimpleTemplateEngine()
+					        def template = engine.createTemplate(templateFile).make(binding)
+					        def bodyString = template.toString()
+
+
+							print 'send email'
+
+							print bodyString
+
+							
+					
+							accountInstance.addToPermissions("account:show,edit,update:${accountInstance.id}")
+							accountInstance.save(flush:true)
+							
+							mailService.sendMail {
+							   to accountInstance.email
+							   from "franklins13app@gmail.com"
+							   subject "[Franklins 13 App] Successfully Registered"
+							   html bodyString
+							}
+
+							
+							
+							flash.message = "You have successfully registered... "
+							
+    						redirect(controller : 'auth', action: 'signIn', params : [accountInstance: accountInstance, username : params.username, password : params.passwordHash, newRegistration : true])
+
+
+						}catch (Exception e){
+
+							println e.printStackTrace();
+							flash.message = "there was a problem with your registration, please try again or contact the administrator"
+							view: 'registrationPage'
+						}
+
+        		
+        		
+    			} else {
+    				flash.message = "something went wrong while trying to register..."
+					render(view: "registrationPage", model: [accountInstance: accountInstance])
+    			}
+    		
+			}else{
+				redirect(controller : 'static', action : 'welcome' )
+			}	
+		
+		} else {
+			
+			flash.message = "We have hit our limit.  Stay tuned, depending on user feedback, the site may be opened up to more users."
+			redirect controller:"static", action:"welcome"
+			
+		}
+			
+	}
+
+
+
 }
