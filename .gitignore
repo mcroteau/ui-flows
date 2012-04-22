@@ -45,3 +45,5 @@
 # other
 *.iws
 
+# Icon
+Icon/
