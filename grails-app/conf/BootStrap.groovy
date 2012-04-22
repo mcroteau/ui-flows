@@ -57,7 +57,7 @@ class BootStrap {
 			simpleAccountFemale.save(flush:true)
 			
 			
-			def simpleAccountMale = new Account(displayName : "Mike", username : 'man', passwordHash : simpleUserPass, email : 'croteau.mike+testing123@gmail.com', active : true)
+			def simpleAccountMale = new Account(displayName : "Mike", username : 'man', passwordHash : simpleUserPass, email : 'testingapp@uiflows.com', active : true)
 			simpleAccountMale.addToRoles(simpleRole)
 			simpleAccountMale.save(flush:true)
 
@@ -71,8 +71,8 @@ class BootStrap {
 	
 	
 	def setPasswords = {	
-		adminPass = new Sha256Hash('admin').toHex()
-		simpleUserPass = new Sha256Hash('simple').toHex()
+		adminPass = new Sha256Hash('administrator').toHex()
+		simpleUserPass = new Sha256Hash('simplepass').toHex()
 	}
 
 	
