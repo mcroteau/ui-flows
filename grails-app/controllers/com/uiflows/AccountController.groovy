@@ -1,9 +1,24 @@
 package com.uiflows
 
+import groovy.text.Template
+import groovy.text.SimpleTemplateEngine
+
+import org.apache.shiro.authc.UsernamePasswordToken
+import org.apache.shiro.crypto.hash.Sha512Hash
+import org.apache.shiro.crypto.hash.Sha256Hash
+import org.apache.shiro.crypto.hash.Sha1Hash
+
+
+import org.apache.shiro.SecurityUtils
+import java.util.UUID
+
 class AccountController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+	def utilitiesService
+	def mailService
+	
     def index = {
         redirect(action: "list", params: params)
     }
@@ -103,6 +118,21 @@ class AccountController {
 
 
 
+	def registration = {
+	
+		def subject = SecurityUtils.getSubject();	
+		if(!subject.authenticated){
+			
+			println "remote address -> ${request.getRemoteAddr()}"
+		
+		}else{
+			redirect(controller : 'static', action : 'welcome' )
+		}
+	}
+
+
+
+
 
 	def register = {
 	
@@ -131,15 +161,13 @@ class AccountController {
 					
 					
 					
-					
-					
 					def host = "localhost:8080"
 						try{
 
 
 							File templateFile = grailsAttributes.getApplicationContext().getResource( File.separator + "emailTemplates" + File.separator + "registrationConfirmation.gtpl").getFile();
 
-							def binding = ["imageLocation" : "http://${host}/franklins13/images/logo.jpg"]
+							def binding = ["imageLocation" : "http://${host}/uiflows/images/logo.jpg"]
 					        def engine = new SimpleTemplateEngine()
 					        def template = engine.createTemplate(templateFile).make(binding)
 					        def bodyString = template.toString()
@@ -156,8 +184,8 @@ class AccountController {
 							
 							mailService.sendMail {
 							   to accountInstance.email
-							   from "franklins13app@gmail.com"
-							   subject "[Franklins 13 App] Successfully Registered"
+							   from "uiflows@gmail.com"
+							   subject "[UI Flows] Successfully Registered"
 							   html bodyString
 							}
 
@@ -172,14 +200,14 @@ class AccountController {
 
 							println e.printStackTrace();
 							flash.message = "there was a problem with your registration, please try again or contact the administrator"
-							view: 'registrationPage'
+							view: 'registration'
 						}
 
         		
         		
     			} else {
     				flash.message = "something went wrong while trying to register..."
-					render(view: "registrationPage", model: [accountInstance: accountInstance])
+					render(view: "registration", model: [accountInstance: accountInstance])
     			}
     		
 			}else{

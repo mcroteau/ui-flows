@@ -1,0 +1,95 @@
+@media all and (max-width: 600px) {
+  body {
+    background: #f8f8f8;
+  }
+
+	.leaderboardWrapper.worst,
+	.leaderboardWrapper.best{
+		float:none;
+		display:block;
+	}
+	
+	#entriesListWrapper{
+		width:450px;
+	}
+	
+	.history #calendar{
+		display:none;
+	}
+	
+	#calendarFull{
+		width:400px !important;
+	}
+	
+	#dashleft{
+		width:450px;
+	}
+	#progress{	
+		width:440px;
+	}
+	
+	
+	.header,
+	.topbar .topcontent{
+		width:500px;
+	}
+	.content,
+	.content.welcome,
+	.content.definitions,
+	.content.experiment{
+		width:450px;
+		padding:10px;
+	}
+	
+	.statsWrapper{ 
+		padding:0px;
+	}
+	.statsWrapper .stats.worst,
+	.statsWrapper .stats.best{
+		float:none;
+		clear:both;
+		margin:20px auto;
+	}
+	
+	.leaderboardWrapper.best,
+	.leaderboardWrapper.worst{
+		float:none;
+		clear:both;
+		margin:20px auto;		
+	}
+	
+	.virtues.left,
+	.virtues.right{
+		float:none;
+		display:block;
+		clear:both;
+		width:450px;
+		margin:10px 0px;
+	}
+	
+	
+	#welcomeChart{
+		width:450px;
+	}
+	
+	.icon{display:none}
+	
+	
+	/** registration styles **/
+
+	.registrationContainer{
+		width:500px
+	}
+	.registrationWrapper.notes{
+		width:500px;
+	}
+
+	.registrationWrapper .message{
+		width:450px;
+	}
+
+	.registrationForm{
+		width:450px;
+		padding:0px 15px 15px 15px;
+	}
+}
