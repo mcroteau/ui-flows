@@ -1,6 +1,11 @@
 package com.uiflows
 
+import grails.converters.*
+
+import org.apache.shiro.SecurityUtils
+
 class UiflowController {
+
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
@@ -20,17 +25,78 @@ class UiflowController {
     }
 
     def save = {
-        def uiflowInstance = new Uiflow(params)
-        if (uiflowInstance.save(flush: true)) {
-            flash.message = "${message(code: 'default.created.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), uiflowInstance.id])}"
-            redirect(action: "show", id: uiflowInstance.id)
-        }
-        else {
-            render(view: "create", model: [uiflowInstance: uiflowInstance])
-        }
-    }
+
+		def subject = SecurityUtils.getSubject();
+		def account
+		if(subject?.getPrincipal()){
+			account = Account.findByUsername(subject?.getPrincipal())
+		}
+		
+		def responseObj = [:]
+		
+		if(account){
+		
+			println 'account here ... '
+		
+			
+			params.privateUiflow = true
+			
+    	    def uiflowInstance = new Uiflow(params)
+			uiflowInstance.account = account
+			uiflowInstance.privateUiflow = true
+			uiflowInstance.uuid = UUID.randomUUID().toString()
+
+			
+    	    if (uiflowInstance.validate() && 
+					uiflowInstance.save(flush: true)) {
+				
+				println 'saved flow ' 
+				
+				account.addToPermissions("Uiflow:show,edit,delete,update:" + uiflowInstance.id)
+				account.save(flush:true)
+				
+				responseObj["status"]  =  'success'
+				responseObj["type"]    = 'success'
+				responseObj["message"] = 'Successfully saved Flow'
+				responseObj["flow"] = uiflowInstance
+			
+				println responseObj
+				render responseObj as JSON
+				
+    	    } else {
+			
+				response.status = 500
+				responseObj["status"]  =  'error'
+				responseObj["type"]    = 'baddata'
+				responseObj["message"] = 'There was a problem saving, try again'
+				responseObj["flow"] = uiflowInstance
+				responseObj["errors"] = uiflowInstance.errors.allErrors
+			
+				render responseObj as JSON
+				
+    	    }
+
+    	}else{	
+			
+			response.status = 500
+			responseObj["status"]  =  'error'
+			responseObj["type"]    = 'auth'
+			responseObj["message"] = 'You must be logged in to view your UI Flows' 
+			responseObj["flow"] = uiflowInstance
+			
+			
+			render responseObj as JSON
+			
+		}
+
+		
+		
+
+	}
 
     def show = {
+	
+	
         def uiflowInstance = Uiflow.get(params.id)
         if (!uiflowInstance) {
             flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
@@ -41,42 +107,146 @@ class UiflowController {
         }
     }
 
+
+
+
     def edit = {
-        def uiflowInstance = Uiflow.get(params.id)
-        if (!uiflowInstance) {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
-            redirect(action: "list")
-        }
-        else {
-            return [uiflowInstance: uiflowInstance]
-        }
+
+
+		println 'edit -> ' + params.id 
+		
+		if(params.id && SecurityUtils.subject.isPermitted("Uiflow:update:"+params.id)){
+		
+
+    		def uiflowInstance = Uiflow.get(params.id)
+    		if (!uiflowInstance) {
+    		    flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
+    		    
+			    redirect(action: "myuiflows")
+    		}
+    		else {
+    		    return [uiflowInstance: uiflowInstance]
+    		}
+		
+		}else{
+    	 
+			flash.message = "You are not authorized to Edit this UI Flow"
+		 	redirect action:"myuiflows"
+    	 
+		}
+	
+	
+
     }
 
+
+
+
+
+
+
+
+
     def update = {
-        def uiflowInstance = Uiflow.get(params.id)
-        if (uiflowInstance) {
-            if (params.version) {
-                def version = params.version.toLong()
-                if (uiflowInstance.version > version) {
-                    
-                    uiflowInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'uiflow.label', default: 'Uiflow')] as Object[], "Another user has updated this Uiflow while you were editing")
-                    render(view: "edit", model: [uiflowInstance: uiflowInstance])
-                    return
-                }
-            }
-            uiflowInstance.properties = params
-            if (!uiflowInstance.hasErrors() && uiflowInstance.save(flush: true)) {
-                flash.message = "${message(code: 'default.updated.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), uiflowInstance.id])}"
-                redirect(action: "show", id: uiflowInstance.id)
-            }
-            else {
-                render(view: "edit", model: [uiflowInstance: uiflowInstance])
-            }
-        }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
-            redirect(action: "list")
-        }
+
+
+
+		def subject = SecurityUtils.getSubject();
+		def account
+		if(subject?.getPrincipal()){
+			account = Account.findByUsername(subject?.getPrincipal())
+		}
+		
+		def responseObj = [:]
+		
+		if(account){
+		
+			println 'account here ... '
+			
+			
+			params.privateUiflow = true
+	        def uiflowInstance = Uiflow.get(params.id.toLong())
+	        
+			if (uiflowInstance) {
+	            if (params.version) {
+	                def version = params.version.toLong()
+	                if (uiflowInstance.version > version) {
+
+	                    uiflowInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'uiflow.label', default: 'Uiflow')] as Object[], "Another user has updated this Uiflow while you were editing")
+	
+	
+						response.status = 500
+						responseObj["status"]  =  'error'
+						responseObj["type"]    = 'baddata'
+						responseObj["message"] = 'There was a problem saving, try again'
+						responseObj["flow"] = uiflowInstance
+						responseObj["errors"] = uiflowInstance.errors.allErrors
+
+						render responseObj as JSON
+	
+	                }
+	            }
+	
+	            uiflowInstance.properties = params
+	            if (!uiflowInstance.hasErrors() && uiflowInstance.save(flush: true)) {
+
+					responseObj["status"]  =  'success'
+					responseObj["type"]    = 'success'
+					responseObj["message"] = 'Successfully updated Flow'
+					responseObj["flow"] = uiflowInstance
+			    	
+					println responseObj
+					render responseObj as JSON
+
+
+	            } else {
+					response.status = 500
+					responseObj["status"]  =  'error'
+					responseObj["type"]    = 'baddata'
+					responseObj["message"] = 'There was a problem saving, try again'
+					responseObj["flow"] = uiflowInstance
+					responseObj["errors"] = uiflowInstance.errors.allErrors
+			    	
+					render responseObj as JSON
+	
+	            }
+	
+	
+	        } else {
+	
+			
+				response.status = 500
+				responseObj["status"]  =  'error'
+				responseObj["type"]    = 'notfound'
+				responseObj["message"] = 'UI Flow not found'
+	    		
+				render responseObj as JSON
+	
+	        }
+	
+	
+    	
+		}else{	
+			
+			responseObj["status"]  =  'error'
+			responseObj["type"]    = 'auth'
+			responseObj["message"] = 'You must be logged in to view your UI Flows' 
+			responseObj["flow"] = uiflowInstance
+			
+			
+			render responseObj as JSON
+			
+		}
+	
+	
+	
+
+
+
+
+
+
+
     }
 
     def delete = {
@@ -97,4 +267,52 @@ class UiflowController {
             redirect(action: "list")
         }
     }
+
+
+	def myuiflows = {
+	
+	
+		params.max = Math.min(params.max ? params.int('max') : 10, 100)
+	
+		def subject = SecurityUtils.getSubject();
+		def account
+		if(subject?.getPrincipal()){
+			account = Account.findByUsername(subject?.getPrincipal())
+		}
+		
+		
+		if(account){
+		
+			println 'account -> ' + account
+			def uiflows = Uiflow.findAllByAccount(account, [sort:"dateCreated", order:"desc", max : params.max])
+		
+			def totalFlows = Uiflow.countByAccount(account)
+
+			if(totalFlows && totalFlows >= 1){
+				
+				
+				[uiflows: uiflows, uiflowsTotal: totalFlows, historyActive:"active"]
+				
+		
+			}else{
+			
+				redirect(controller:'uiflow', action:'noflows')
+			
+			}
+			
+			
+		}else{
+			
+			flash.message = "You must be logged in to view your UI Flows"
+			redirect(controller:"auth", action:"login")
+		
+		}
+	
+	}
+	
+	def noflows = {}
+	
+	def newflow = {}
+	
+	
 }

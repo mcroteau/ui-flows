@@ -48,15 +48,6 @@
                         
                             <tr class="prop">
                                 <td valign="top" class="name">
-                                    <label for="description"><g:message code="uiflow.description.label" default="Description" /></label>
-                                </td>
-                                <td valign="top" class="value ${hasErrors(bean: uiflowInstance, field: 'description', 'errors')}">
-                                    <g:textField name="description" value="${uiflowInstance?.description}" />
-                                </td>
-                            </tr>
-                        
-                            <tr class="prop">
-                                <td valign="top" class="name">
                                     <label for="passcode"><g:message code="uiflow.passcode.label" default="Passcode" /></label>
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: uiflowInstance, field: 'passcode', 'errors')}">
@@ -79,6 +70,15 @@
                                 </td>
                                 <td valign="top" class="value ${hasErrors(bean: uiflowInstance, field: 'uiFlow', 'errors')}">
                                     <g:textField name="uiFlow" value="${uiflowInstance?.uiFlow}" />
+                                </td>
+                            </tr>
+                        
+                            <tr class="prop">
+                                <td valign="top" class="name">
+                                    <label for="uuid"><g:message code="uiflow.uuid.label" default="Uuid" /></label>
+                                </td>
+                                <td valign="top" class="value ${hasErrors(bean: uiflowInstance, field: 'uuid', 'errors')}">
+                                    <g:textField name="uuid" value="${uiflowInstance?.uuid}" />
                                 </td>
                             </tr>
                         

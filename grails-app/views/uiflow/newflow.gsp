@@ -1,11 +1,9 @@
-<%@ page import="com.uiflows.Uiflow" %>
-
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="layout" content="fullscreen" />
     <g:set var="entityName" value="${message(code: 'uiflow.label', default: 'Uiflow')}" />
-    <title>UI Flows : Edit Flow</title>
+    <title>UI Flows : New Flow</title>
 
 	
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
@@ -30,14 +28,12 @@
 		
 		<div id="uiflow-persistence-data">	
 			<span class="listingButton">Back to Listing</span>		
-			<span class="form-element">Name <input type="text" name="name" class="name"  value="${uiflowInstance?.name}"/></span>			
-			<span class="form-element">Passcode <input type="text" name="passcode" class="passcode" value="${uiflowInstance?.passcode}" /></span>
+			<span class="form-element">Name <input type="text" name="name" class="name" />${uiflow?.name}</span>			
+			<span class="form-element">Passcode <input type="text" name="passcode" class="passcode" />${uiflow?.passcode}</span>
 			
 			<!--<span class="form-element">Open to Public <input type="checkbox" name="privateUiflow" class="privateUiflow" />${uiflow?.privateUiflow}</span>-->
 			
-			<input type="hidden" value="${uiflowInstance?.id}" class="uiflowId"/>
-			<input type="hidden" value="${uiflowInstance?.uiFlow}" class="uiflowcontent"/>
-			
+			<input type="hidden" value="" class="uiflowId"/>
 		</div>
 		
 		
@@ -45,8 +41,8 @@
 			<a href="#" class="removeInteractions">Clear Canvas</a>
 			<a href="#" class="removeConnections">- Remove All Connections</a>
 			<a href="#" class="addNewInteraction"> + Add interaction</a>
-			<a href="#" class="updateFlow">Update</a>
-			<a href="#" class="deleteFlow">Delete</a>		
+			<a href="#" class="saveInteraction saveFlow">save</a>
+			<!-- <a href="#" class="outputUIFlows">output ui flows</a>-->		
 		</div>
 		
 	</div>
@@ -65,12 +61,8 @@
 	
 		$(document).ready(function(){
 			
-			var flows = ${uiflowInstance.uiFlow};
-			console.log(flows);
-			loadUIFlows(flows);	
 			
 		});
-		
 		
 		function getEventTarget(e){
 			var e=e || window.event;
@@ -133,4 +125,3 @@
 	
 </body>
 </html>
-

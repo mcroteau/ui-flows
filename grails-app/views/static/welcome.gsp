@@ -18,10 +18,16 @@
 	
 	
 	<div class="welcomelinks">
-		<g:link controller="static" action="what" class="button darkgrey large">What is a UI Flow?</g:link>
 		<g:if test="${!shiro.principal()}">
+			<g:link controller="static" action="what" class="button darkgrey large">What is a UI Flow?</g:link>
 			<g:link controller="account" action="registration" class="button large blue">Start Creating Flows</g:link>	
-		</g:if>		
+		</g:if>	
+		<g:else>
+		
+			<g:link controller="static" action="what" class="button darkgrey large">What is a UI Flow?</g:link>
+			<g:link controller="uiflow" action="myuiflows" class="button large blue">My UI Flows</g:link>
+			
+		</g:else>	
 	</div>
 
 </div>

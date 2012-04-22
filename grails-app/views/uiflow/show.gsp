@@ -51,13 +51,6 @@
                         </tr>
                     
                         <tr class="prop">
-                            <td valign="top" class="name"><g:message code="uiflow.description.label" default="Description" /></td>
-                            
-                            <td valign="top" class="value">${fieldValue(bean: uiflowInstance, field: "description")}</td>
-                            
-                        </tr>
-                    
-                        <tr class="prop">
                             <td valign="top" class="name"><g:message code="uiflow.lastUpdated.label" default="Last Updated" /></td>
                             
                             <td valign="top" class="value"><g:formatDate date="${uiflowInstance?.lastUpdated}" /></td>
@@ -82,6 +75,13 @@
                             <td valign="top" class="name"><g:message code="uiflow.uiFlow.label" default="Ui Flow" /></td>
                             
                             <td valign="top" class="value">${fieldValue(bean: uiflowInstance, field: "uiFlow")}</td>
+                            
+                        </tr>
+                    
+                        <tr class="prop">
+                            <td valign="top" class="name"><g:message code="uiflow.uuid.label" default="Uuid" /></td>
+                            
+                            <td valign="top" class="value">${fieldValue(bean: uiflowInstance, field: "uuid")}</td>
                             
                         </tr>
                     

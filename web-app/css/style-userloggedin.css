@@ -31,6 +31,11 @@ body, html {
   float: right;
   text-shadow: 1px 1px 1px #a73601; }
 
+.topcontent .openings {
+  background: #757575;
+  float: right;
+  text-shadow: 1px 1px 1px #555; }
+
 .content {
   width: 800px;
   margin: auto;

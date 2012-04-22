@@ -52,12 +52,8 @@ class BootStrap {
 			adminAccount.save(flush:true)
 			
 			
-			def simpleAccountFemale = new Account(displayName : "Simple Woman", username : 'woman', passwordHash : simpleUserPass, email : 'woman@uiflows.com', active : true)
-			simpleAccountFemale.addToRoles(simpleRole)
-			simpleAccountFemale.save(flush:true)
 			
-			
-			def simpleAccountMale = new Account(displayName : "Mike", username : 'man', passwordHash : simpleUserPass, email : 'testingapp@uiflows.com', active : true)
+			def simpleAccountMale = new Account(displayName : "Mike", username : 'simpleuser', passwordHash : simpleUserPass, email : 'testingapp@uiflows.com', active : true)
 			simpleAccountMale.addToRoles(simpleRole)
 			simpleAccountMale.save(flush:true)
 

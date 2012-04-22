@@ -30,9 +30,9 @@
                         
                             <g:sortableColumn property="dateCreated" title="${message(code: 'uiflow.dateCreated.label', default: 'Date Created')}" />
                         
-                            <g:sortableColumn property="description" title="${message(code: 'uiflow.description.label', default: 'Description')}" />
-                        
                             <g:sortableColumn property="lastUpdated" title="${message(code: 'uiflow.lastUpdated.label', default: 'Last Updated')}" />
+                        
+                            <g:sortableColumn property="passcode" title="${message(code: 'uiflow.passcode.label', default: 'Passcode')}" />
                         
                         </tr>
                     </thead>
@@ -48,9 +48,9 @@
                         
                             <td><g:formatDate date="${uiflowInstance.dateCreated}" /></td>
                         
-                            <td>${fieldValue(bean: uiflowInstance, field: "description")}</td>
-                        
                             <td><g:formatDate date="${uiflowInstance.lastUpdated}" /></td>
+                        
+                            <td>${fieldValue(bean: uiflowInstance, field: "passcode")}</td>
                         
                         </tr>
                     </g:each>

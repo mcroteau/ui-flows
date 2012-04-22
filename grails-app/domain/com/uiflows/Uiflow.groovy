@@ -3,7 +3,6 @@ package com.uiflows
 class Uiflow {
 
     String name
-	String description
 	String uiFlow
 	
 	boolean privateUiflow
@@ -15,9 +14,11 @@ class Uiflow {
 	Account account
     static belongsTo = Account
 
+	String uuid
+
 
     static constraints = {
-        name(nullable: false, blank: false, unique: true)
+        name(nullable: false, blank: false)
     }
 	
 	static mapping = {

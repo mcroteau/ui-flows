@@ -34,6 +34,7 @@
 			
 
 			<g:if test="${shiro.principal()}">
+				<g:link controller="uiflow" action="myuiflows" class="openings">My Flows</g:link>
 				<g:link controller="auth" action="signOut" class="logout">Logout</g:link>
 			</g:if>
 			<g:else>
@@ -55,7 +56,7 @@
 		<nav class="menu">
 			
 			<g:link controller="static" class="${welcomeActive}" action="welcome" title="UI Flows : Welcome to UI Flows">Welcome</g:link>
-			<g:link controller="static" class="${whatActive}" action="experiment" title="UI Flows : What is a UI Flow">What is This?</g:link>
+			<g:link controller="static" class="${whatActive}" action="what" title="UI Flows : What is a UI Flow">What is This?</g:link>
 			
 		</nav>
 	</div>
