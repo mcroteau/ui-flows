@@ -8,7 +8,7 @@
     <title>UI Flows : Edit Flow</title>
 
 	
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>-->
 
 	
 	<script type="text/javascript" src="${resource(dir:'js/lib/jquery/', 'jquery.min.js')}"></script>
@@ -24,6 +24,14 @@
 
 <body onunload="jsPlumb.unload();">
 	
+	<div id="shareFlowWrapper">
+		<h2>Share UI Flow</h2>
+		<p>Use the link below to share this flow.</p>
+		
+		<blockquote id="shareFlow">${uiflowInstance?.uuid}</blockquote>
+
+		<p>With Passcode : <em>${uiflowInstance.passcode}</em></p>
+	</div>
 	
 	<div id="uiflows">
 
@@ -36,7 +44,7 @@
 			<!--<span class="form-element">Open to Public <input type="checkbox" name="privateUiflow" class="privateUiflow" />${uiflow?.privateUiflow}</span>-->
 			
 			<input type="hidden" value="${uiflowInstance?.id}" class="uiflowId"/>
-			<input type="hidden" value="${uiflowInstance?.uiFlow}" class="uiflowcontent"/>
+			<input type="hidden" value="${uiflowInstance?.uuid}" id="uuid" class="uuid"/>
 			
 		</div>
 		
@@ -45,6 +53,7 @@
 			<a href="#" class="removeInteractions">Clear Canvas</a>
 			<a href="#" class="removeConnections">- Remove All Connections</a>
 			<a href="#" class="addNewInteraction"> + Add interaction</a>
+			<a href="#" class="shareFlow">Share</a>
 			<a href="#" class="updateFlow">Update</a>
 			<a href="#" class="deleteFlow">Delete</a>		
 		</div>
@@ -66,8 +75,12 @@
 		$(document).ready(function(){
 			
 			var flows = ${uiflowInstance.uiFlow};
+			console.log(${uiflowInstance.uiFlow});
 			console.log(flows);
 			loadUIFlows(flows);	
+			
+			var flowURL = window.location.protocol + "//" + window.location.host + "/uiflows/uiflow/flow/${uiflowInstance?.uuid}";
+			$('#shareFlow').html(flowURL);
 			
 		});
 		

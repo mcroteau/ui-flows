@@ -7,6 +7,8 @@ class UrlMappings {
 			}
 		}
 
+		"/uiflow/flow/$uuid"(controller: "uiflow", action:"enterpasscode")
+
 		"/"(view:"/index")
 		"500"(view:'/error')
 	}

@@ -110,31 +110,57 @@ class UiflowController {
 
 
 
+
+
+
     def edit = {
 
 
-		println 'edit -> ' + params.id 
+		println 'edit uuid -> ' + params.uuid 
+		println 'edit passcode -> ' + params?.passcode
 		
-		if(params.id && SecurityUtils.subject.isPermitted("Uiflow:update:"+params.id)){
+		if(params?.passcode && params?.uuid){
 		
-
-    		def uiflowInstance = Uiflow.get(params.id)
-    		if (!uiflowInstance) {
-    		    flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
+			println 'have both'
+			println "passcode : ${params.passcode}      uuid : ${params.uuid}"
+			def uiflowInstance = Uiflow.findByPasscodeAndUuid(params.passcode, params.uuid)
+			
+			if (!uiflowInstance) {
+			
+				println 'CANNOT FIND FLOW'
+    		    flash.message = params.passcode + " is the wrong passcode for " + params.uuid
     		    
-			    redirect(action: "myuiflows")
-    		}
-    		else {
-    		    return [uiflowInstance: uiflowInstance]
+			    redirect(action: "enterpasscode")
+    		} else {
+			
+				println 'Found Flow.. render'
+				[uiflowInstance: uiflowInstance]
+    		    render(view : 'edit')
+				
     		}
 		
 		}else{
-    	 
-			flash.message = "You are not authorized to Edit this UI Flow"
-		 	redirect action:"myuiflows"
-    	 
+			if(params.id && SecurityUtils.subject.isPermitted("Uiflow:update:"+params.id)){
+			
+        	
+    			def uiflowInstance = Uiflow.get(params.id)
+    			if (!uiflowInstance) {
+    			    flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
+    			    
+				    redirect(action: "myuiflows")
+    			}
+    			else {
+    			    return [uiflowInstance: uiflowInstance]
+    			}
+			
+			}else{
+    		 
+				flash.message = "You are not authorized to Edit this UI Flow"
+			 	redirect action:"myuiflows"
+    		 
+			}		
+		
 		}
-	
 	
 
     }
@@ -228,44 +254,64 @@ class UiflowController {
     	
 		}else{	
 			
+			response.status = 500
 			responseObj["status"]  =  'error'
 			responseObj["type"]    = 'auth'
 			responseObj["message"] = 'You must be logged in to view your UI Flows' 
 			responseObj["flow"] = uiflowInstance
 			
-			
 			render responseObj as JSON
 			
 		}
 	
-	
-	
-
-
-
-
-
-
-
     }
 
+
+
     def delete = {
-        def uiflowInstance = Uiflow.get(params.id)
-        if (uiflowInstance) {
-            try {
-                uiflowInstance.delete(flush: true)
-                flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
-                redirect(action: "list")
-            }
-            catch (org.springframework.dao.DataIntegrityViolationException e) {
-                flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
-                redirect(action: "show", id: params.id)
-            }
-        }
-        else {
-            flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'uiflow.label', default: 'Uiflow'), params.id])}"
-            redirect(action: "list")
-        }
+
+		println 'edit -> ' + params.id 
+	
+		def responseObj = [:]
+		
+		if(params.id && SecurityUtils.subject.isPermitted("Uiflow:delete:"+params.id)){
+    	    def uiflowInstance = Uiflow.get(params.id)
+    	    if (uiflowInstance) {
+    	        try {
+    	            uiflowInstance.delete(flush: true)
+
+					responseObj["status"]  =  'success'
+					responseObj["type"]    = 'success'
+					responseObj["message"] = 'Successfully deleted flow' 
+					responseObj["flow"] = uiflowInstance
+
+					render responseObj as JSON
+					
+    	        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+				
+					response.status = 500
+					responseObj["status"]  =  'error'
+					responseObj["type"]    = 'baddata'
+					responseObj["message"] = 'Data integrity issue' 
+					responseObj["flow"] = uiflowInstance
+
+					render responseObj as JSON
+					
+    	        }
+    	    }
+    	    else {
+			
+				response.status = 500			
+				responseObj["status"]  =  'error'
+				responseObj["type"]    = 'auth'
+				responseObj["message"] = 'You are not authorized to delete this UI Flow' 
+				responseObj["flow"] = uiflowInstance
+			
+				render responseObj as JSON
+
+
+    	    }
+		}
     }
 
 
@@ -313,6 +359,35 @@ class UiflowController {
 	def noflows = {}
 	
 	def newflow = {}
+	
+	def enterpasscode = {
+		
+		println 'uuid -> ' + params?.uuid
+		
+		if(params?.uuid){
+			
+			def uiflowInstance = Uiflow.findByUuid(params.uuid)
+			
+			if(!uiflowInstance){
+				
+				flash.message = "Cannot find Flow."
+				redirect(controller:"auth", action:"login")
+				
+			}else{
+				
+				request.uiflowInstance = uiflowInstance
+				request.uuid = params.uuid
+			
+			}
+			
+			
+		}else{	
+			flash.message = "You must be logged in to view your UI Flows"
+			redirect(controller:"auth", action:"login")
+		}
+	
+	}
+	
 	
 	
 }

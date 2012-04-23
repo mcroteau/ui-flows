@@ -50,7 +50,7 @@
 			padding:20px;
 			height:20px;
 			width:200px;
-			margin-left:-100;
+			margin-left:-100px;
 			color:#fff;
 			font-size:11px;
 			text-shadow:0px 0px 1px #333;
@@ -64,7 +64,32 @@
 	        box-shadow:  1px 1px 5px 5px rgba(0, 0, 0, .2);
 	
 		}
+
+
+		#shareFlowWrapper{
+			opacity:1.0;
+			z-index: 200;
+			position:absolute;
+			left:50%;
+			top:50px;
+			padding:15px;
+			width:250px;
+			margin-left:-125px;
+			color:#333;
+			font-size:11px;
+			text-shadow:0px 0px 1px #efefef;
+			background:#efefef;
+			border:solid 2px #ddd;
+			-moz-border-radius:3px;
+			border-radius:3px;
+			
+	        -webkit-box-shadow:  1px 1px 5px 5px rgba(0, 0, 0, .2);
+	        -moz-box-shadow:  1px 1px 5px 5px rgba(0, 0, 0, .2);
+	        box-shadow:  1px 1px 5px 5px rgba(0, 0, 0, .2);
+	
+		}
 		
+				
 
 		#uiflows{
 
@@ -200,11 +225,39 @@
 		#uiflowactions a.editFlow:hover{
 			background:#04589f;
 		}
-								
+			
+		.interaction .userAction p::selection,
+		.interaction .userAction p:focus,
+		.interaction .userAction p:active {
+			background: #fff;
+			border:solid 1px #ddd;
+			color:#333;
+		}
+		
+		.interaction .userAction p::-moz-selection{
+			background: #fff;
+			border:solid 1px #ddd;
+			color:#333;
+		}
+		
+		
+		p.interaction .userAction::-webkit-selection{
+			background: #fff;
+			border:solid 1px #ddd;
+			color:#333;
+		}
+		 
+		#shareFlow{
+			margin:10px auto;
+		}
 	</style>
 	
 	<div id="modal" class="modal"></div>
 	<div id="loading">Saving ...</div>
+	
+	
+	
+	
 	
     <g:layoutHead />
 

@@ -172,6 +172,31 @@ UserActions.validateSaveUIFlow = function(){
 	}else{	
 		if(nameVal === "")$('.name').addClass('error');
 		if(passcode === "")$('.passcode').addClass('error');
+		
+		if(passcode === "" || nameVal ==""){
+			UserActions.showLoading();
+			$('#loading').html('Fix Name & Passcode errors');
+
+			$('#loading').css({"background" : "#f14621"});
+			setTimeout(function() {
+
+				$('#loading').css({"background" : "#3c4246"});
+				UserActions.hideLoading();
+		    }, 2000);
+		}
+		
+		
+		if(interactionsCount === 0){
+			UserActions.showLoading();
+			$('#loading').html('No interactions defined..');
+
+			$('#loading').css({"background" : "#f14621"});
+			setTimeout(function() {
+
+				$('#loading').css({"background" : "#3c4246"});
+				UserActions.hideLoading();
+		    }, 2000);
+		}
 	}
 	
 };
@@ -251,6 +276,51 @@ UserActions.successfullyUpdated = function(responseObj){
 		UserActions.hideLoading();
     }, 2000);	
 }
+
+
+UserActions.deleteUIFlow = function(){
+	
+	var uiflowId = $('.uiflowId').val();
+	if(uiflowId != ""){
+		
+		UserActions.showLoading();
+			
+		$.ajax({
+			url : '/uiflows/uiflow/delete',
+			data : 'id=' + uiflowId,
+			type : 'post',
+			error : UserActions.error
+		}).then(UserActions.successfullyDeleted)	
+		
+	}else{	
+		
+	}	
+}
+
+UserActions.successfullyDeleted = function(){
+	$('#loading').html('successfully deleted flow');
+	setTimeout(function() {
+		UserActions.hideLoading();
+		window.location = '/uiflows/uiflow/myuiflows'
+    }, 2000);	
+}
+
+
+UserActions.shareUIFlow = function(){
+	// var uuid = $('#uuid');
+	UserActions.showLoading();
+	
+	// var newURL = window.location.protocol + "://" + window.location.host + "/uiflows/uiflow/flow/"+uuid;
+	
+	$('#shareFlow').html(newURL);
+
+	setTimeout(function() {
+
+		$('#loading').css({"background" : "#3c4246"});
+		UserActions.hideLoading();
+	}, 2000);
+}
+
 
 
 UserActions.showLoading = function(){

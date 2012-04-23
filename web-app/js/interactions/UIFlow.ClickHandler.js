@@ -53,6 +53,20 @@ function delegateClickEvent(e){
 		UserActions.validateUpdateUIFlow();
 	}
 	
+	if($target.hasClass('deleteFlow')){
+		e.preventDefault();
+		UserActions.deleteUIFlow();
+	}	
+	
+	
+	if($target.hasClass('shareFlow')){
+		e.preventDefault();
+		UserActions.shareUIFlow();
+	}
+	
+	
+	
+	
 	
 	if($target.hasClass('listingButton')){
 		e.preventDefault();
