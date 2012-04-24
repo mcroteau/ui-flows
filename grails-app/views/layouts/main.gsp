@@ -39,7 +39,7 @@
 			</g:if>
 			<g:else>
 				<g:if test="${remaining > 0}">
-					<g:link controller="account" action="registrationPage" class="openings">${remaining} Openings Left,  + Join</g:link>
+					<g:link controller="account" action="registration" class="openings">${remaining} Openings Left,  + Join</g:link>
 				</g:if>
 				<g:else>
 					<span class="openings">Sorry, no openings Left!</span>

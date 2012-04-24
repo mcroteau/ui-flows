@@ -16,6 +16,8 @@
 	
 	<h1>Inspired by Ryan Singer's approach to designing ui flows</h1>
 	
+
+	<img src="/uiflows/images/325-login-flow.png"/>
 	
 	<div class="welcomelinks">
 		<g:if test="${!shiro.principal()}">

@@ -9,7 +9,7 @@ class UrlMappings {
 
 		"/uiflow/shared/$uuid"(controller: "uiflow", action:"shared")
 
-		"/"(view:"/index")
+		"/"(controller:"static", action:"welcome")
 		"500"(view:'/error')
 	}
 }

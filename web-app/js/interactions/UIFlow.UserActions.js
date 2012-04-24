@@ -214,16 +214,30 @@ UserActions.successfullySaved = function(responseObj){
 	setTimeout(function() {
 		$('.saveFlow').addClass('updateFlow').removeClass('saveFlow').html('Update');
 		$('.uiflowId').val(responseObj.flow.id);
-		UserActions.addInteractionLink('delete');
+		UserActions.addShareLink();
+		UserActions.addDeleteLink();
 		UserActions.hideLoading();
+		
+		$('#passcodeShared').html(responseObj.flow.passcode);
+		var flowURL = window.location.protocol + "//" + window.location.host + "/uiflows/uiflow/shared/" + responseObj.flow.uuid;
+		$('#shareFlow').html(flowURL);
+		
     }, 2000);
 		
 }
 
-UserActions.addInteractionLink = function(link){
+UserActions.addDeleteLink = function(){
 	var html = '<a href="#" class="deleteFlow">Delete</a>';
 	$('#uiflowactions').append(html);
 };
+
+
+UserActions.addShareLink = function(){
+	var html = '<a href="#" class="shareFlow">Share</a>';
+	$(html).insertBefore($('.updateFlow'));
+	
+};
+
 
 UserActions.displayList = function(){
 	window.location = '/uiflows/uiflow/myuiflows';

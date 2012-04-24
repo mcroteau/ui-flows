@@ -23,6 +23,20 @@
 <body onunload="jsPlumb.unload();">
 	
 	
+	<div id="shareFlowWrapper">
+		<h2>Share UI Flow</h2>
+		<p>Use the link below to share this flow.</p>
+		
+		<blockquote id="shareFlow"></blockquote>
+
+		<p>With Passcode : <em id="passcodeShared"></em></p>
+		
+		<div class="buttons">
+			<a href="javascript:" class="button small red" id="closeShared">Close</a>
+		</div>
+	</div>
+	
+	
 	<div id="uiflows">
 
 		
