@@ -266,6 +266,42 @@ UserActions.validateUpdateUIFlow = function(){
 	
 };
 
+
+
+UserActions.validateUpdateShardUIFlow = function(){
+	var nameValShared = $('#nameShared').val();
+	var passcodeShared = $('#passcodeShared').val();
+	var uiflowIdShared = $('#uiflowIdShared').val();
+	
+	var interactionsCount = $('.interaction').length;
+	
+	if(interactionsCount > 0 &&
+	    uiflowIdShared != "" && nameValShared != "" && passcodeShared != ""){
+		
+		UserActions.showLoading();
+		
+		var uiflow = outputUIFlows();
+		
+		$.ajax({
+			url : '/uiflows/uiflow/updateShared',
+			data : 'id=' + uiflowIdShared + '&name=' + nameValShared + '&passcode=' + passcodeShared +  '&uiFlow=' + uiflow,
+			type : 'post',
+			error : UserActions.error
+		}).then(UserActions.successfullyUpdated)	
+		
+	}else{
+		console.warn('error : missing data');
+		
+	}
+	
+};
+
+
+
+
+
+
+
 UserActions.successfullyUpdated = function(responseObj){
 	console.log('successfully updated');
 	console.log(responseObj);
@@ -307,18 +343,9 @@ UserActions.successfullyDeleted = function(){
 
 
 UserActions.shareUIFlow = function(){
-	// var uuid = $('#uuid');
-	UserActions.showLoading();
 	
-	// var newURL = window.location.protocol + "://" + window.location.host + "/uiflows/uiflow/flow/"+uuid;
+	UserActions.showSharedFlow();
 	
-	$('#shareFlow').html(newURL);
-
-	setTimeout(function() {
-
-		$('#loading').css({"background" : "#3c4246"});
-		UserActions.hideLoading();
-	}, 2000);
 }
 
 
@@ -346,6 +373,35 @@ UserActions.hideLoading = function(){
 		}, 50);
 	});
 };
+
+
+
+
+UserActions.showSharedFlow = function(){
+	$('#modal').animate({
+		"opacity" : 0.4,
+		"z-index" : 1000
+	}, 150, function(){
+		$('#shareFlowWrapper').animate({
+			"opacity" : 1,
+			"z-index" : 1001
+		}, 50);
+	});
+};
+
+UserActions.hideSharedFlow = function(){
+	$('#modal').animate({
+		"opacity" : 0.0,
+		"z-index" : -1
+	}, 150, function(){
+		$('#shareFlowWrapper').animate({
+			"opacity" : 0,
+			"z-index" : -2
+		}, 50);
+	});
+};
+
+
 
 
 

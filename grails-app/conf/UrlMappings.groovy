@@ -7,7 +7,7 @@ class UrlMappings {
 			}
 		}
 
-		"/uiflow/flow/$uuid"(controller: "uiflow", action:"enterpasscode")
+		"/uiflow/shared/$uuid"(controller: "uiflow", action:"shared")
 
 		"/"(view:"/index")
 		"500"(view:'/error')

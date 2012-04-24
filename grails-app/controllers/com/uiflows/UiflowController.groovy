@@ -169,6 +169,133 @@ class UiflowController {
 
 
 
+    def shared = {
+
+
+		println 'shared uuid -> ' + params.uuid 
+		
+		if(params?.uuid){
+		
+			println "uuid : ${params.uuid}"
+			def uiflowInstance = Uiflow.findByUuid(params.uuid)
+			
+			if (!uiflowInstance) {
+			
+				println 'CANNOT FIND FLOW'
+    		    flash.message = "cannot find the UI Flow you are looking for "
+    		    
+			    redirect(action: "myuiflows")
+			
+    		} else {
+			
+				println 'Found Flow.. render'
+				return [uiflowInstance: uiflowInstance]
+				
+    		}
+		
+		}
+		
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+    def updateShared = {
+
+
+		def responseObj = [:]
+		
+			
+		params.privateUiflow = true
+		def uiflowInstance = Uiflow.get(params.id.toLong())
+		
+		if (uiflowInstance) {
+		    if (params.version) {
+		        def version = params.version.toLong()
+		        if (uiflowInstance.version > version) {
+		
+		            uiflowInstance.errors.rejectValue("version", "default.optimistic.locking.failure", [message(code: 'uiflow.label', default: 'Uiflow')] as Object[], "Another user has updated this Uiflow while you were editing")
+		
+		
+					response.status = 500
+					responseObj["status"]  =  'error'
+					responseObj["type"]    = 'baddata'
+					responseObj["message"] = 'There was a problem saving, try again'
+					responseObj["flow"] = uiflowInstance
+					responseObj["errors"] = uiflowInstance.errors.allErrors
+		
+					render responseObj as JSON
+		
+		        }
+		    }
+		
+		    uiflowInstance.properties = params
+		
+		    if (!uiflowInstance.hasErrors() && uiflowInstance.save(flush: true)) {
+		
+				responseObj["status"]  =  'success'
+				responseObj["type"]    = 'success'
+				responseObj["message"] = 'Successfully updated Flow'
+				responseObj["flow"] = uiflowInstance
+		    	
+				println responseObj
+				render responseObj as JSON
+		
+		
+		    } else {
+				response.status = 500
+				responseObj["status"]  =  'error'
+				responseObj["type"]    = 'baddata'
+				responseObj["message"] = 'There was a problem saving, try again'
+				responseObj["flow"] = uiflowInstance
+				responseObj["errors"] = uiflowInstance.errors.allErrors
+		    	
+				render responseObj as JSON
+		
+		    }
+		
+		
+		} else {
+		
+		
+			response.status = 500
+			responseObj["status"]  =  'error'
+			responseObj["type"]    = 'notfound'
+			responseObj["message"] = 'UI Flow not found'
+			
+			render responseObj as JSON
+		
+		}
+		
+	
+    	
+	
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -268,6 +395,13 @@ class UiflowController {
 
 
 
+
+
+
+
+
+
+
     def delete = {
 
 		println 'edit -> ' + params.id 
@@ -356,34 +490,66 @@ class UiflowController {
 	
 	}
 	
+	
 	def noflows = {}
 	
+	
 	def newflow = {}
+
+
 	
 	def enterpasscode = {
 		
-		println 'uuid -> ' + params?.uuid
+		println 'shared passcode -> ' + params?.passcode
+		println 'shared uuid -> ' + params?.uuid
 		
-		if(params?.uuid){
+		def responseObj = [:]
+		
+		if(params?.uuid && params.passcode){
 			
-			def uiflowInstance = Uiflow.findByUuid(params.uuid)
+			println 'have both'
+			println "passcode : ${params.passcode}      uuid : ${params.uuid}"
+			def uiflowInstance = Uiflow.findByPasscodeAndUuid(params.passcode, params.uuid)
 			
-			if(!uiflowInstance){
+			def flow = Uiflow.findByPasscode(params.passcode)
+			def uuidf = Uiflow.findByUuid(params.uuid)
+			
+			println "flow : ${flow.uuid}        ->       ${uuidf.passcode}    ${uuidf.id}:${flow.id}"
+			
+			println "${uiflowInstance.uuid} ..."
+			
+			if(uiflowInstance){
 				
-				flash.message = "Cannot find Flow."
-				redirect(controller:"auth", action:"login")
+				response.status = 200			
+				responseObj["status"]  =  'success'
+				responseObj["flow"] = uiflowInstance
+			
+				render responseObj as JSON
 				
 			}else{
 				
-				request.uiflowInstance = uiflowInstance
-				request.uuid = params.uuid
+				println 'null instance'
+				
+				response.status = 500			
+				responseObj["status"]  =  'error'
+				responseObj["message"] = 'incorrect info, cannot find UI Flow' 
+				responseObj["flow"] = uiflowInstance
+		    	
+				render responseObj as JSON	
 			
 			}
 			
 			
 		}else{	
-			flash.message = "You must be logged in to view your UI Flows"
-			redirect(controller:"auth", action:"login")
+		
+			response.status = 500			
+			responseObj["status"]  =  'error'
+			responseObj["type"]    = 'missing'
+			responseObj["message"] = 'missing passcode' 
+	    	
+			render responseObj as JSON
+
+			
 		}
 	
 	}

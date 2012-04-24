@@ -17,7 +17,9 @@
 	
 	
 	<style type="text/css">
-
+		#shareFlowWrapper a{
+			text-decoration:none;
+		}
 	</style>
 			
 </head>
@@ -25,30 +27,39 @@
 <body onunload="jsPlumb.unload();">
 	
 	<div id="shareFlowWrapper">
-		<h2>Share UI Flow</h2>
-		<p>Use the link below to share this flow.</p>
+		<h2>View the Shared UI Flow</h2>
+		<p class="sharedNote">Enter the code given to you below</p>
 		
-		<blockquote id="shareFlow">${uiflowInstance?.uuid}</blockquote>
-
-		<p>With Passcode : <em>${uiflowInstance.passcode}</em></p>
+		<p>
+		<input type="text" value="" id="passcodeEntered"/>
+		<input type="hidden" value="${uiflowInstance?.uuid}" id="uuid" class="uuid"/>
+		
+		</p>
 		
 		<div class="buttons">
-			<a href="javascript:" class="button small red" id="closeShared">Close</a>
+			<a href="javascript:" class="button small red" id="cancelShared">Cancel</a>
+			<a href="javascript:" id="submitPasscode" class="button small blue">View Flow</a>
 		</div>
+	
 	</div>
+	
+	
+	
+	
+	
 	
 	<div id="uiflows">
 
 		
 		<div id="uiflow-persistence-data">	
 			<span class="listingButton">Back to Listing</span>		
-			<span class="form-element">Name <input type="text" name="name" class="name"  value="${uiflowInstance?.name}"/></span>			
-			<span class="form-element">Passcode <input type="text" name="passcode" class="passcode" value="${uiflowInstance?.passcode}" /></span>
+			<span class="form-element">Name : <em>${uiflowInstance?.name}</em></span>	
 			
 			<!--<span class="form-element">Open to Public <input type="checkbox" name="privateUiflow" class="privateUiflow" />${uiflow?.privateUiflow}</span>-->
 			
-			<input type="hidden" value="${uiflowInstance?.id}" class="uiflowId"/>
-			<input type="hidden" value="${uiflowInstance?.uuid}" id="uuid" class="uuid"/>
+			<input type="hidden" value="${uiflowInstance?.name}" id="nameShared"/>
+			<input type="hidden" value="${uiflowInstance?.id}" id="uiflowIdShared"/>
+			<input type="hidden" value="" id="passcodeShared"/>
 			
 		</div>
 		
@@ -57,9 +68,7 @@
 			<a href="#" class="removeInteractions">Clear Canvas</a>
 			<a href="#" class="removeConnections">- Remove All Connections</a>
 			<a href="#" class="addNewInteraction"> + Add interaction</a>
-			<a href="#" class="shareFlow">Share</a>
-			<a href="#" class="updateFlow">Update</a>
-			<a href="#" class="deleteFlow">Delete</a>		
+			<a href="#" class="updateSharedFlow">Update</a>
 		</div>
 		
 	</div>
@@ -79,19 +88,69 @@
 		$(document).ready(function(){
 			
 			var flows = ${uiflowInstance.uiFlow};
-			console.log(${uiflowInstance.uiFlow});
-			console.log(flows);
 			loadUIFlows(flows);	
 			
-			var flowURL = window.location.protocol + "//" + window.location.host + "/uiflows/uiflow/shared/${uiflowInstance?.uuid}";
-			$('#shareFlow').html(flowURL);
+			
+			UserActions.showSharedFlow();
+			
+			var loading = false;
+			
+			$('#submitPasscode').click(function(){
+				
+				
+				var passcode = $('#passcodeEntered').val();
+				var uuid = $('#uuid').val();
+				
+				
+				if(passcode != "" && uuid != "" && !loading){
+					loading = true;
+					$.ajax({
+						url   : '/uiflows/uiflow/enterpasscode',
+						data  : 'passcode=' + passcode + '&uuid=' + uuid,
+						error : function(){
+							loading = false;
+							$('#passcodeEntered').css("border", "solid 1px #ff0000");
+							$('#shareFlowWrapper p.sharedNote').empty();
+							$('#shareFlowWrapper p.sharedNote').html('Wrong passcode, please try again');
+							
+						}
+						
+					}).then(function(data){
+						
+						loading = false;
+						
+						$('#shareFlowWrapper').empty();
+						$('#shareFlowWrapper').html('<h1>Correct Passcode</h1>');
+						
+						setTimeout(function() {
+							UserActions.hideSharedFlow();
+						}, 2000);
+						
+						console.log(data.flow.passcode + ' passcode' );
+						$('#passcodeShared').val(data.flow.passcode);
+						
+					});
+									
+				}else{
+					
+					$('#passcodeEntered').css("border", "solid 1px #ff0000");
+					$('#shareFlowWrapper p.sharedNote').empty();
+					$('#shareFlowWrapper p.sharedNote').html('Please enter a passcode');
+				}
+
+			});
 			
 			
-			$('#closeShared').click(function(){
-				UserActions.hideSharedFlow();
-			})
+			
+			$('#cancelShared').click(function(){
+				window.location = '/uiflows/static/welcome';
+			});
+			
 			
 		});
+		
+		
+		
 		
 		
 		function getEventTarget(e){

@@ -67,8 +67,8 @@
 
 
 		#shareFlowWrapper{
-			opacity:1.0;
-			z-index: 200;
+			opacity:0.0;
+			z-index: -1;
 			position:absolute;
 			left:50%;
 			top:50px;
@@ -215,6 +215,7 @@
 			
 			
 		#uiflowactions a.updateFlow,
+		#uiflowactions a.updateSharedFlow,
 		#uiflowactions a.editFlow{
 			background:#357cb7;
 			border-right:solid 1px #2d72ac;
@@ -222,6 +223,7 @@
 		}
 		
 		#uiflowactions a.updateFlow:hover,
+		#uiflowactions a.updateSharedFlow:hover,
 		#uiflowactions a.editFlow:hover{
 			background:#04589f;
 		}
@@ -249,6 +251,10 @@
 		 
 		#shareFlow{
 			margin:10px auto;
+		}
+		
+		a{
+			text-decoration:none !important;
 		}
 	</style>
 	

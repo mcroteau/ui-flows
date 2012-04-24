@@ -53,6 +53,13 @@ function delegateClickEvent(e){
 		UserActions.validateUpdateUIFlow();
 	}
 	
+	if($target.hasClass('updateSharedFlow')){
+		e.preventDefault();
+		UserActions.validateUpdateShardUIFlow();
+	}
+	
+	
+	
 	if($target.hasClass('deleteFlow')){
 		e.preventDefault();
 		UserActions.deleteUIFlow();
